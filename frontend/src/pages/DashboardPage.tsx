@@ -1,19 +1,15 @@
-import React from 'react'
-import ProjectOverview from '../components/dashboard/ProjectOverview'
-import TeamStats from '../components/dashboard/TeamStats'
-
+import React from "react"
+import ProjectOverview from "../components/dashboard/ProjectOverview"
+import TeamStats from "../components/dashboard/TeamStats"
 
 const DashboardPage: React.FC = () => {
-return (
-<div>
-<h2>Dashboard</h2>
-<div className="grid-2">
-<ProjectOverview />
-<TeamStats />
-</div>
-</div>
-)
+  return (
+    <div className="content">
+      <h1>Dashboard</h1>
+      <ProjectOverview />
+      <TeamStats />
+    </div>
+  )
 }
-
 
 export default DashboardPage

@@ -1,17 +1,15 @@
-import React from 'react'
-import ProjectList from '../components/projects/projectslist'
-import ProjectForm from '../components/projects/ProjectForm'
-
+import React from "react"
+import ProjectForm from "../components/projects/ProjectForm"
+import ProjectList from "../components/projects/projectslist"
 
 const ProjectsPage: React.FC = () => {
-return (
-<div>
-<h2>Projects</h2>
-<ProjectForm />
-<ProjectList />
-</div>
-)
+  return (
+    <div className="content">
+      <h1>Projects</h1>
+      <ProjectForm />
+      <ProjectList />
+    </div>
+  )
 }
-
 
 export default ProjectsPage

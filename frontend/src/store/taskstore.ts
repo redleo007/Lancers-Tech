@@ -1,21 +1,34 @@
-import { create }from 'zustand'
-import { Task } from '../types'
-
+// src/store/taskStore.ts
+import { create } from 'zustand'
+import { Task, TaskStatus } from '../types'
 
 type TaskState = {
-tasks: Task[]
-addTask: (t: Task) => void
-moveTask: (id: string, status: Task['status']) => void
+  tasks: Task[]
+  addTask: (t: Task) => void
+  updateTask: (id: string, patch: Partial<Task>) => void
+  moveTask: (id: string, status: TaskStatus) => void
+  assignToSprint: (taskId: string, sprintId: string | null) => void
+  removeTask: (id: string) => void
 }
 
-
-const useTaskStore = create<TaskState>((set) => ({
-tasks: [
-{ id: 't1', title: 'Set up repo', status: 'todo', projectId: 'p1' }
-],
-addTask: (t) => set((s) => ({ tasks: [t, ...s.tasks] })),
-moveTask: (id, status) => set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, status } : t) }))
+export const useTaskStore = create<TaskState>((set) => ({
+  tasks: [
+    {
+      id: 't1',
+      title: 'Initial setup',
+      description: 'Set up repo, CI, linting',
+      status: 'todo',
+      projectId: 'p1',
+      sprintId: null,
+      estimate: 3,
+    },
+  ],
+  addTask: (t) => set((s) => ({ tasks: [...s.tasks, t] })),
+  updateTask: (id, patch) =>
+    set((s) => ({ tasks: s.tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)) })),
+  moveTask: (id, status) =>
+    set((s) => ({ tasks: s.tasks.map((t) => (t.id === id ? { ...t, status } : t)) })),
+  assignToSprint: (taskId, sprintId) =>
+    set((s) => ({ tasks: s.tasks.map((t) => (t.id === taskId ? { ...t, sprintId } : t)) })),
+  removeTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
 }))
-
-
-export default useTaskStore

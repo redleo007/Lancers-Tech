@@ -1,30 +1,37 @@
-import React, { useState } from 'react'
-import useProjectStore from '../../store/projectStore'
-
+import React, { useState } from "react"
+import { useProjects } from "../../hooks/useProjects"
 
 const ProjectForm: React.FC = () => {
-const addProject = useProjectStore((s: { addProject: any }) => s.addProject)
-const [name, setName] = useState('')
-const [description, setDescription] = useState('')
+  const { addProject } = useProjects()
+  const [name, setName] = useState("")
+  const [status, setStatus] = useState("Planned")
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!name.trim()) return
+    addProject({ id: Date.now().toString(), name, status })
+    setName("")
+  }
 
-function submit(e: React.FormEvent) {
-e.preventDefault()
-if (!name) return
-addProject({ id: Date.now().toString(), name, description })
-setName('')
-setDescription('')
+  return (
+    <div className="card">
+      <h2>Create Project</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Project name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="Planned">Planned</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <button type="submit">Add Project</button>
+      </form>
+    </div>
+  )
 }
-
-
-return (
-<form onSubmit={submit} className="card form-inline">
-<input value={name} onChange={(e) => setName(e.target.value)} placeholder="Project name" />
-<input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-<button type="submit">Add Project</button>
-</form>
-)
-}
-
 
 export default ProjectForm

@@ -1,24 +1,27 @@
-import React from 'react'
-import useProjectStore from '../../store/projectStore'
-
+import React from "react"
+import { useProjects } from "../../hooks/useProjects"
 
 const ProjectList: React.FC = () => {
-const projects = useProjectStore((s: { projects: any }) => s.projects)
+  const { projects, removeProject } = useProjects()
 
-
-return (
-<div className="card">
-<h3>Projects</h3>
-<ul>
-{projects.map((p: { id: React.Key | null | undefined; name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined }) => (
-<li key={p.id}>
-<strong>{p.name}</strong> — {p.description}
-</li>
-))}
-</ul>
-</div>
-)
+  return (
+    <div className="card">
+      <h2>All Projects</h2>
+      <ul>
+        {projects.map((p) => (
+          <li key={p.id} style={{ marginBottom: "0.5rem" }}>
+            {p.name} — {p.status}
+            <button
+              style={{ marginLeft: "1rem" }}
+              onClick={() => removeProject(p.id)}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
-
 
 export default ProjectList

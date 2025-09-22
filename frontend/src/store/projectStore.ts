@@ -1,19 +1,22 @@
-import { create }from 'zustand'
-import { Project } from '../types'
+import { create } from "zustand"
 
-
-type ProjectState = {
-projects: Project[]
-addProject: (p: Project) => void
+interface Project {
+  id: string
+  name: string
+  status: string
 }
 
+interface ProjectState {
+  [x: string]: any
+  projects: Project[]
+  addProject: (project: Project) => void
+  removeProject: (id: string) => void
+}
 
-const useProjectStore = create<ProjectState>((set) => ({
-projects: [
-{ id: 'p1', name: 'Alpha', description: 'First project' }
-],
-addProject: (p) => set((s) => ({ projects: [p, ...s.projects] }))
+export const useProjectStore = create<ProjectState>((set) => ({
+  projects: [],
+  addProject: (project) =>
+    set((state) => ({ projects: [...state.projects, project] })),
+  removeProject: (id) =>
+    set((state) => ({ projects: state.projects.filter((p) => p.id !== id) })),
 }))
-
-
-export default useProjectStore

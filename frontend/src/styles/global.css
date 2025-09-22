@@ -1,113 +1,152 @@
-/* -------------------------------
-   Variables
---------------------------------- */
+/* ===============================
+   Theme Variables
+================================= */
 :root {
-  --primary-color: #4f46e5; /* Indigo 600 */
-  --primary-hover: #4338ca;
-  --secondary-color: #f3f4f6; /* Gray 100 */
-  --accent-color: #10b981; /* Green 500 */
-  --text-color: #111827; /* Gray 900 */
-  --muted-color: #6b7280; /* Gray 500 */
-  --bg-color: #f9fafb; /* Light gray background */
-  --card-bg: #ffffff;
-  --border-radius: 0.5rem;
-  --transition: 0.3s ease;
-  --shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --color-primary: #2563eb; /* Blue-600 */
+  --color-primary-dark: #1d4ed8;
+  --color-accent: #10b981; /* Green-500 */
+  --color-danger: #ef4444; /* Red-500 */
+  --color-warning: #f59e0b; /* Amber-500 */
+
+  --color-bg: #f9fafb; /* Gray-50 */
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb; /* Gray-200 */
+  --color-text: #111827; /* Gray-900 */
+  --color-muted: #6b7280; /* Gray-500 */
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+
+  --transition: 0.25s ease;
 }
 
-/* -------------------------------
-   Global Reset
---------------------------------- */
+/* ===============================
+   Reset & Base
+================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', system-ui, Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  line-height: 1.5;
-  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
 }
 
-/* -------------------------------
+/* Utility Classes */
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+/* ===============================
    Header
---------------------------------- */
+================================= */
 .site-header {
-  background-color: var(--card-bg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .site-header h1 {
   font-size: 1.5rem;
-  color: var(--primary-color);
+  font-weight: 600;
+  color: var(--color-primary);
 }
 
-.site-header nav span {
+.site-header nav a {
+  text-decoration: none;
+  margin-left: 1.5rem;
+  color: var(--color-muted);
   font-weight: 500;
-  color: var(--muted-color);
+  transition: color var(--transition);
 }
 
-/* -------------------------------
+.site-header nav a:hover,
+.site-header nav a.active {
+  color: var(--color-primary);
+}
+
+/* ===============================
    Sidebar
---------------------------------- */
+================================= */
 .sidebar {
-  width: 220px;
-  background-color: var(--card-bg);
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  height: calc(100vh - 72px); /* Adjust for header height */
+  width: 250px;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   position: sticky;
-  top: 1rem;
-}
-
-.sidebar ul {
-  list-style: none;
-}
-
-.sidebar li {
-  margin-bottom: 1rem;
+  top: 72px; /* matches header height */
+  height: calc(100vh - 72px);
 }
 
 .sidebar a {
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 500;
   display: block;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  color: var(--color-text);
   transition: background var(--transition), color var(--transition);
 }
 
 .sidebar a:hover,
 .sidebar a.active {
-  background-color: var(--primary-color);
+  background: var(--color-primary);
   color: #fff;
 }
 
-/* -------------------------------
+/* ===============================
    Footer
---------------------------------- */
+================================= */
 .site-footer {
-  background-color: var(--card-bg);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
   text-align: center;
   padding: 1rem;
-  border-top: 1px solid #e5e7eb;
   font-size: 0.875rem;
-  color: var(--muted-color);
+  color: var(--color-muted);
 }
 
-/* -------------------------------
-   Layout Grid
---------------------------------- */
+/* ===============================
+   Layout
+================================= */
 .app-root {
   display: flex;
   flex-direction: column;
@@ -116,77 +155,109 @@ body {
 
 .main-grid {
   display: flex;
-  gap: 1.5rem;
+  flex: 1;
   padding: 1.5rem;
+  gap: 1.5rem;
 }
 
 .content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* -------------------------------
-   Card Component
---------------------------------- */
+/* ===============================
+   Card
+================================= */
 .card {
-  background-color: var(--card-bg);
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 1.5rem;
-  transition: transform var(--transition);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
-/* -------------------------------
-   Buttons
---------------------------------- */
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: var(--border-radius);
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background var(--transition);
-}
-
-button:hover {
-  background-color: var(--primary-hover);
-}
-
-/* -------------------------------
-   Forms
---------------------------------- */
-input, select, textarea {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: var(--border-radius);
-  width: 100%;
+.card h2 {
   margin-bottom: 1rem;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+/* ===============================
+   Buttons
+================================= */
+button,
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background var(--transition), transform var(--transition);
 }
 
-/* Form inline (e.g., add project/task) */
-.form-inline {
+button:active,
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+/* ===============================
+   Forms
+================================= */
+form {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* -------------------------------
-   Task Board
---------------------------------- */
+input,
+select,
+textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  transition: border var(--transition), box-shadow var(--transition);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* ===============================
+   Task Board (Kanban Style)
+================================= */
 .task-board {
   display: flex;
   gap: 1rem;
@@ -195,63 +266,52 @@ input:focus, select:focus, textarea:focus {
 }
 
 .task-column {
-  background-color: var(--secondary-color);
-  min-width: 280px;
-  padding: 0.75rem;
-  border-radius: var(--border-radius);
+  flex: 0 0 300px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .task-column h4 {
-  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--text-color);
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
 }
 
 .task-card {
-  background-color: var(--card-bg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.75rem;
-  border-radius: var(--border-radius);
   margin-bottom: 0.75rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.task-actions {
-  display: flex;
-  gap: 0.25rem;
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
-.task-actions button {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-}
-
-/* -------------------------------
-   Typography
---------------------------------- */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-color);
-}
-
-p {
-  color: var(--muted-color);
-}
-
-/* -------------------------------
+/* ===============================
    Responsive
---------------------------------- */
-@media (max-width: 768px) {
+================================= */
+@media (max-width: 1024px) {
   .main-grid {
     flex-direction: column;
-    gap: 1rem;
   }
   .sidebar {
-    width: 100%;
+    flex-direction: row;
     height: auto;
-    position: relative;
-    top: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    width: 100%;
+    overflow-x: auto;
+  }
+  .sidebar a {
+    flex: 1;
+    text-align: center;
   }
 }
