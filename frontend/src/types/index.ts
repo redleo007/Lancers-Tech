@@ -1,4 +1,4 @@
-// src/types/index.ts
+// frontend/src/types/index.ts
 export type Project = {
   id: string
   name: string
@@ -13,9 +13,9 @@ export type Task = {
   title: string
   description?: string
   status: TaskStatus
-  projectId?: string
+  projectId?: string | null
   sprintId?: string | null
-  estimate?: number // story points
+  estimate?: number
   assigneeId?: string | null
 }
 
@@ -34,5 +34,11 @@ export type BacklogItem = {
   title: string
   description?: string
   priority?: number
-  projectId?: string
+  projectId?: string | null
+}
+
+export type User = {
+  id: string
+  name: string
+  email: string
 }

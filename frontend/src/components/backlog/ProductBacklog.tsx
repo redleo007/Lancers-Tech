@@ -1,4 +1,3 @@
-// src/components/backlog/ProductBacklog.tsx
 import React, { useState } from 'react'
 import { useBacklog } from '../../hooks/useBacklog'
 import { useTasks } from '../../hooks/useTasks'
@@ -11,16 +10,14 @@ const ProductBacklog: React.FC = () => {
   const create = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) return
-    const id = Date.now().toString()
-    addItem({ id, title: title.trim(), description: '', priority: items.length + 1 })
+    addItem({ id: Date.now().toString(), title: title.trim(), priority: items.length + 1, description: '' })
     setTitle('')
   }
 
   const pushToTasks = (itemId: string) => {
-    const item = items.find((i) => i.id === itemId)
+    const item = items.find(i => i.id === itemId)
     if (!item) return
-    const task = { id: 't' + Date.now().toString(), title: item.title, description: item.description, status: 'todo' as const, projectId: item.projectId, sprintId: null, estimate: undefined }
-    addTask(task)
+    addTask({ id: Date.now().toString(), title: item.title, description: item.description, status: 'todo', projectId: item.projectId ?? null, sprintId: null })
     removeItem(itemId)
   }
 
@@ -28,19 +25,23 @@ const ProductBacklog: React.FC = () => {
     <div className="card">
       <h3>Product Backlog</h3>
       <form onSubmit={create} className="form-inline">
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Backlog item title" />
-        <button type="submit">Add</button>
+        <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Backlog item title" />
+        <button className="btn btn-primary" type="submit">Add</button>
       </form>
 
       <ul style={{ marginTop: 12 }}>
-        {items.sort((a,b)=> (a.priority ?? 0) - (b.priority ?? 0)).map((it) => (
-          <li key={it.id} style={{ marginBottom: 8 }}>
-            <strong>{it.title}</strong> <small style={{ color: '#6b7280' }}>#{it.priority}</small>
-            <div style={{ marginTop: 6 }}>
-              <button onClick={() => prioritize(it.id, (it.priority ?? 1) - 1)}>Move Up</button>
-              <button onClick={() => prioritize(it.id, (it.priority ?? 1) + 1)}>Move Down</button>
-              <button onClick={() => pushToTasks(it.id)} style={{ marginLeft: 8 }}>Push to Tasks</button>
-              <button onClick={() => removeItem(it.id)} style={{ marginLeft: 8, background: '#ef4444' }}>Delete</button>
+        {items.sort((a,b)=> (a.priority ?? 0) - (b.priority ?? 0)).map(it => (
+          <li key={it.id} style={{ marginBottom: 10 }}>
+            <div style={{ display: 'flex', justifyContent:'space-between' }}>
+              <div>
+                <strong>{it.title}</strong><div className="text-muted">#{it.priority}</div>
+              </div>
+              <div style={{ display:'flex', gap:8 }}>
+                <button onClick={()=>prioritize(it.id, (it.priority ?? 1) - 1)} className="btn">Up</button>
+                <button onClick={()=>prioritize(it.id, (it.priority ?? 1) + 1)} className="btn">Down</button>
+                <button onClick={()=>pushToTasks(it.id)} className="btn btn-accent">Push</button>
+                <button onClick={()=>removeItem(it.id)} className="btn btn-danger">Delete</button>
+              </div>
             </div>
           </li>
         ))}
@@ -48,5 +49,4 @@ const ProductBacklog: React.FC = () => {
     </div>
   )
 }
-
 export default ProductBacklog

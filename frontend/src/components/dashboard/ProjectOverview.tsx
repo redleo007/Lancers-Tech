@@ -1,21 +1,15 @@
-import React from "react"
-import { useProjects } from "../../hooks/useProjects"
+import React from 'react'
+import { useProjects } from '../../hooks/useProjects'
 
 const ProjectOverview: React.FC = () => {
   const { projects } = useProjects()
-
   return (
     <div className="card">
-      <h2>Project Overview</h2>
+      <h3>Projects Overview</h3>
       <ul>
-        {projects.map((project) => (
-          <li key={project.id}>
-            <strong>{project.name}</strong> — {project.status}
-          </li>
-        ))}
+        {projects.map(p => <li key={p.id}><strong>{p.name}</strong> — <span className="text-muted">{p.status}</span></li>)}
       </ul>
     </div>
   )
 }
-
 export default ProjectOverview

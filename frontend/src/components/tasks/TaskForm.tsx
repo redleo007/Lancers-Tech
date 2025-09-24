@@ -1,4 +1,3 @@
-// src/components/tasks/TaskForm.tsx
 import React, { useState } from 'react'
 import { useTasks } from '../../hooks/useTasks'
 
@@ -10,28 +9,17 @@ const TaskForm: React.FC<{ projectId?: string; sprintId?: string | null }> = ({ 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) return
-    const t = {
-      id: Date.now().toString(),
-      title: title.trim(),
-      description: '',
-      status: 'todo' as const,
-      projectId,
-      sprintId,
-      estimate: estimate === '' ? undefined : Number(estimate),
-    }
-    addTask(t)
-    setTitle('')
-    setEstimate('')
+    addTask({ id: Date.now().toString(), title: title.trim(), description: '', status: 'todo', projectId: projectId ?? null, sprintId, estimate: estimate === '' ? undefined : Number(estimate) })
+    setTitle(''); setEstimate('')
   }
 
   return (
     <form onSubmit={submit} className="card">
-      <h3>Create task</h3>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Task title" />
-      <input value={estimate} onChange={(e) => setEstimate(e.target.value ? Number(e.target.value) : '')} placeholder="Estimate (pts)" />
-      <button type="submit">Add Task</button>
+      <h3>Create Task</h3>
+      <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Task title" />
+      <input value={estimate as any} onChange={(e)=>setEstimate(e.target.value ? Number(e.target.value) : '')} placeholder="Estimate (pts)" />
+      <button className="btn btn-primary" type="submit">Add Task</button>
     </form>
   )
 }
-
 export default TaskForm

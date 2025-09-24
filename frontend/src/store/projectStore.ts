@@ -1,22 +1,28 @@
-import { create } from "zustand"
+// frontend/src/store/projectStore.ts
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { Project } from '../types'
 
-interface Project {
-  id: string
-  name: string
-  status: string
-}
-
-interface ProjectState {
-  [x: string]: any
+type ProjectState = {
   projects: Project[]
-  addProject: (project: Project) => void
+  addProject: (p: Project) => void
+  updateProject: (id: string, patch: Partial<Project>) => void
   removeProject: (id: string) => void
+  reset: () => void
 }
 
-export const useProjectStore = create<ProjectState>((set) => ({
-  projects: [],
-  addProject: (project) =>
-    set((state) => ({ projects: [...state.projects, project] })),
-  removeProject: (id) =>
-    set((state) => ({ projects: state.projects.filter((p) => p.id !== id) })),
-}))
+export const useProjectStore = create<ProjectState>()(
+  persist(
+    (set) => ({
+      projects: [
+        { id: 'p1', name: 'Demo Project', description: 'Example project', status: 'In Progress' },
+      ],
+      addProject: (p) => set((s) => ({ projects: [...s.projects, p] })),
+      updateProject: (id, patch) =>
+        set((s) => ({ projects: s.projects.map((proj) => (proj.id === id ? { ...proj, ...patch } : proj)) })),
+      removeProject: (id) => set((s) => ({ projects: s.projects.filter((proj) => proj.id !== id) })),
+      reset: () => set({ projects: [] }),
+    }),
+    { name: 'projects-storage' }
+  )
+)
