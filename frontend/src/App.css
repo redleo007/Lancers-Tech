@@ -1,246 +1,51 @@
-/*
-  app.css
-  App-specific polished dashboard components
-  - Header, sidebar, dashboard cards, alerts, tables, modals
-  - Vibrant colors + modern hover effects
-*/
-
-/* -------------------------------
-   Header
--------------------------------- */
-.app-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: var(--space-4) var(--space-6);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: var(--shadow-sm);
-}
-.app-header .brand {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
-}
-.app-header .nav-links {
-  display: flex;
-  gap: var(--space-4);
-}
-.app-header .nav-links a {
-  font-weight: 600;
-  color: var(--text);
-}
-.app-header .nav-links a:hover {
-  color: var(--primary);
-  border-bottom: 2px solid var(--primary);
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+  padding: 0;
 }
 
-/* -------------------------------
-   Sidebar
--------------------------------- */
-.app-sidebar {
-  width: 260px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: var(--space-6) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  height: 100vh;
-  position: fixed;
-  top: 64px;
-  left: 0;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease;
-}
-.app-sidebar.hidden { transform: translateX(-100%); }
-.app-sidebar a {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  color: var(--muted);
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-.app-sidebar a:hover {
-  background: var(--muted-surface);
-  color: var(--primary);
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 24px;
 }
 
-/* -------------------------------
-   Main
--------------------------------- */
-.app-main {
-  margin-left: 0;
-  padding: var(--space-6);
-  flex: 1;
-}
-@media (min-width: var(--bp-md)) {
-  .app-main { margin-left: 260px; }
-}
-
-/* -------------------------------
-   Dashboard Cards
--------------------------------- */
-.dashboard-3 { grid-template-columns: repeat(3, 1fr); }
-.card-stat {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border-top: 4px solid var(--primary);
-}
-.card-stat:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-.card-stat .title {
-  font-weight: 600;
-  color: var(--muted);
-}
-.card-stat .value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-top: var(--space-2);
-  color: var(--text);
-}
-
-/* -------------------------------
-   Alerts
--------------------------------- */
-.alert {
-  padding: var(--space-4) var(--space-6);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-4);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-.alert.info {
-  background: #dbeafe; color: #1e40af;
-}
-.alert.success {
-  background: #dcfce7; color: #166534;
-}
-.alert.warning {
-  background: #fef9c3; color: #854d0e;
-}
-.alert.danger {
-  background: #fee2e2; color: #991b1b;
-}
-
-/* -------------------------------
-   Table
--------------------------------- */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-.table th, .table td {
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-.table th {
-  background: var(--muted-surface);
-  font-weight: 600;
-  color: var(--muted);
-}
-.table tr:hover { background: rgba(0,97,242,0.05); }
-
-/* -------------------------------
-   Modal
--------------------------------- */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: var(--overlay);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-.modal-overlay.active {
-  opacity: 1; pointer-events: auto;
-}
-.modal {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  width: 90%;
-  max-width: 480px;
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-30px);
-  transition: transform 0.3s ease;
-}
-.modal-overlay.active .modal { transform: translateY(0); }
-
-/* -------------------------------
-   Forms
--------------------------------- */
-.form-group { margin-bottom: var(--space-4); }
-.form-label {
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-  display: block;
-}
-.input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.input:focus {
-  border-color: var(--primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0,97,242,0.25);
-}
-
-/* -------------------------------
-   Buttons
--------------------------------- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-weight: 600;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #e0e0e0;
+  color: #222;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 1rem;
+  transition: background 0.2s;
 }
-.btn.primary {
-  background: var(--primary);
+
+.btn-primary {
+  background: #1976d2;
   color: #fff;
 }
-.btn.primary:hover {
-  background: var(--primary-hover);
+
+.btn:active {
+  background: #bdbdbd;
 }
-.btn.ghost {
-  background: transparent;
-  color: var(--muted);
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
-.btn.ghost:hover {
-  background: var(--muted-surface);
-  color: var(--primary);
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 16px 0;
 }
-.btn.accent {
-  background: var(--accent);
-  color: #fff;
+
+.text-muted {
+  color: #888;
+  font-size: 0.95em;
 }
-.btn.accent:hover {
-  background: var(--accent-hover);
-}
-.btn:active { transform: scale(0.97); }

@@ -5,10 +5,11 @@ import DashboardPage from './pages/DashboardPage'
 import ProjectsPage from './pages/ProjectsPage'
 import SprintsPage from './pages/SprintsPage'
 import BacklogPage from './pages/BacklogPage'
-import Login from './components/auth/Login'
 import Profile from './components/auth/Profile'
 import { useAuth } from './hooks/useAuth'
 import ErrorBoundary from './components/common/ErrorBoundary'
+import PrivateRoute from './components/common/PrivateRoute'
+import './App.css'
 import './styles/global.css'
 
 const App: React.FC = () => {
@@ -40,13 +41,54 @@ const App: React.FC = () => {
           <main className="content">
             <Routes>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/sprints" element={<SprintsPage />} />
-              <Route path="/backlog" element={<BacklogPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <PrivateRoute>
+                    <ProjectsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/sprints"
+                element={
+                  <PrivateRoute>
+                    <SprintsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/backlog"
+                element={
+                  <PrivateRoute>
+                    <BacklogPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
               <Route path="*" element={<div>Not found</div>} />
             </Routes>
           </main>

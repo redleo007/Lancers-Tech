@@ -1,5 +1,4 @@
-// frontend/src/pages/LoginPage.tsx
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -12,13 +11,14 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  // if redirected with token param, set and navigate to dashboard
-  React.useEffect(() => {
+  // Handle redirect with token param
+  useEffect(() => {
     const token = searchParams.get('token')
     if (token) {
       localStorage.setItem('token', token)
       navigate('/dashboard')
     }
+    // eslint-disable-next-line
   }, [])
 
   const startGoogle = () => {
@@ -57,26 +57,53 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 820, margin: '48px auto', display: 'grid', gap: 16 }}>
-      <div className="card">
+    <div style={{ maxWidth: 420, margin: '48px auto', display: 'grid', gap: 16 }}>
+      <div className="card" style={{ padding: 32 }}>
         <h2>Sign in</h2>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={startGoogle} className="btn btn-primary">Sign in with Google</button>
-          <button onClick={startApple} className="btn">Sign in with Apple</button>
+        <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+          <button onClick={startGoogle} className="btn btn-primary" style={{ flex: 1 }}>
+            Sign in with Google
+          </button>
+          <button onClick={startApple} className="btn" style={{ flex: 1 }}>
+            Sign in with Apple
+          </button>
         </div>
         <hr />
-        <form onSubmit={otpSent ? verifyOtp : requestOtp} style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 12 }}>
-          <input value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="+1555..." />
-          {!otpSent ? <button className="btn btn-primary" type="submit">Send OTP</button> : (
+        <form
+          onSubmit={otpSent ? verifyOtp : requestOtp}
+          style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 12 }}
+        >
+          <input
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            placeholder="+1555..."
+            style={{ flex: 2 }}
+            required
+          />
+          {!otpSent ? (
+            <button className="btn btn-primary" type="submit" style={{ flex: 1 }}>
+              Send OTP
+            </button>
+          ) : (
             <>
-              <input value={otp} onChange={(e)=>setOtp(e.target.value)} placeholder="Enter OTP" />
-              <button className="btn btn-primary" type="submit">Verify OTP</button>
+              <input
+                value={otp}
+                onChange={e => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+                style={{ flex: 2 }}
+                required
+              />
+              <button className="btn btn-primary" type="submit" style={{ flex: 1 }}>
+                Verify OTP
+              </button>
             </>
           )}
         </form>
       </div>
-      <div className="card text-muted">
-        <p>Demo login: Google/Apple require app credentials. Phone login uses Twilio to send SMS (configure .env).</p>
+      <div className="card text-muted" style={{ padding: 16 }}>
+        <p>
+          Demo login: Google/Apple require app credentials. Phone login uses Twilio to send SMS (configure <code>.env</code>).
+        </p>
       </div>
     </div>
   )
