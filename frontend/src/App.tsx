@@ -1,6 +1,7 @@
 import React from 'react'
 import { Routes, Route, NavLink } from 'react-router-dom'
-import LoginPage from './pages/LoginPage'
+import SignInPage from './pages/SignInPage'
+import SignUpPage from './pages/SignUpPage'
 import DashboardPage from './pages/DashboardPage'
 import ProjectsPage from './pages/ProjectsPage'
 import SprintsPage from './pages/SprintsPage'
@@ -18,29 +19,34 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <div className="app-root">
-        <header className="site-header">
-          <h1>Scrum Management</h1>
-          <nav>
-            <NavLink to="/dashboard">Dashboard</NavLink>
-            <NavLink to="/projects" style={{ marginLeft: 12 }}>Projects</NavLink>
-            <NavLink to="/sprints" style={{ marginLeft: 12 }}>Sprints</NavLink>
-            <NavLink to="/backlog" style={{ marginLeft: 12 }}>Backlog</NavLink>
-            <NavLink to="/profile" style={{ marginLeft: 12 }}>{user ? 'Profile' : 'Login'}</NavLink>
-          </nav>
-        </header>
+        {user && (
+          <header className="site-header">
+            <h1>Scrum Management</h1>
+            <nav>
+              <NavLink to="/dashboard">Dashboard</NavLink>
+              <NavLink to="/projects" style={{ marginLeft: 12 }}>Projects</NavLink>
+              <NavLink to="/sprints" style={{ marginLeft: 12 }}>Sprints</NavLink>
+              <NavLink to="/backlog" style={{ marginLeft: 12 }}>Backlog</NavLink>
+              <NavLink to="/profile" style={{ marginLeft: 12 }}>Profile</NavLink>
+            </nav>
+          </header>
+        )}
 
         <div className="main-grid">
-          <aside className="sidebar">
-            <NavLink to="/dashboard">Dashboard</NavLink>
-            <NavLink to="/projects">Projects</NavLink>
-            <NavLink to="/sprints">Sprints</NavLink>
-            <NavLink to="/backlog">Backlog</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
-          </aside>
+          {user && (
+            <aside className="sidebar">
+              <NavLink to="/dashboard">Dashboard</NavLink>
+              <NavLink to="/projects">Projects</NavLink>
+              <NavLink to="/sprints">Sprints</NavLink>
+              <NavLink to="/backlog">Backlog</NavLink>
+              <NavLink to="/profile">Profile</NavLink>
+            </aside>
+          )}
 
           <main className="content">
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<SignInPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
               <Route
                 path="/"
                 element={
@@ -94,10 +100,15 @@ const App: React.FC = () => {
           </main>
         </div>
 
-        <footer className="site-footer">© {new Date().getFullYear()} Scrum Management</footer>
+        {user && (
+          <footer className="site-footer">© {new Date().getFullYear()} Scrum Management</footer>
+        )}
       </div>
     </ErrorBoundary>
   )
 }
 
 export default App
+
+/* Example usage in your component */
+

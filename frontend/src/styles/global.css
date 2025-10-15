@@ -29,8 +29,6 @@
    Reset & Base
 ================================= */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
@@ -38,6 +36,8 @@ html,
 body,
 #root {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -46,6 +46,15 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   line-height: 1.6;
+}
+
+a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* Utility Classes */
