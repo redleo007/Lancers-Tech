@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const scrumLogo = "/scrum-logo.svg";
+const googleLogo = "/Google__G__logo.svg.webp";
+const appleLogo = "/png-clipart-apple-logo-brand-apple-company-trademark-thumbnail.png";
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function SignUpPage() {
@@ -23,39 +25,59 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="auth-root">
-      <header className="auth-header">
-        <img src={scrumLogo} alt="Scrum Manager Logo" className="scrum-logo" />
-        <h1 className="scrum-title">Scrum Manager</h1>
-      </header>
-      <div className="auth-card">
-        <h2>Sign Up</h2>
-        <form onSubmit={handleSignUp} className="auth-form">
-          <input
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Name"
-            required
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-          <button className="btn btn-primary" type="submit">Sign Up</button>
-        </form>
-        <div className="auth-link">
-          <span>Already have an account? <a href="/login">Sign In</a></span>
+    <div className="login-container">
+      <div className="login-left">
+        <div className="login-form-container">
+          <h1>Create your Account</h1>
+          <form onSubmit={handleSignUp} className="login-form">
+            <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Create a password"
+                required
+              />
+            </div>
+            <button type="submit" className="btn-signin">Sign Up</button>
+          </form>
+          <div className="divider">
+            <span>or continue with</span>
+          </div>
+          <div className="social-buttons">
+            <button className="btn-social btn-google">
+              <img src={googleLogo} alt="Google" />
+              <span>Google</span>
+            </button>
+            <button className="btn-social btn-apple">
+              <img src={appleLogo} alt="Apple" />
+              <span>Apple</span>
+            </button>
+          </div>
+          <p className="signup-link">
+            Already have an account? <a href="/login">Sign in</a>
+          </p>
         </div>
       </div>
     </div>

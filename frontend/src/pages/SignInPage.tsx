@@ -14,12 +14,6 @@ export default function SignInPage() {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Temporary mock for demo login
-    if (email === "demo@gmail.com" && password === "demopass1234") {
-      localStorage.setItem("token", "demo-token");
-      navigate("/dashboard");
-      return;
-    }
     try {
       const res = await axios.post(`${API}/auth/email/login`, { email, password });
       localStorage.setItem("token", res.data.token);
@@ -29,51 +23,53 @@ export default function SignInPage() {
     }
   };
 
-  const startGoogle = () => {
-    window.location.href = `${API}/auth/google`;
-  };
-
-  const startApple = () => {
-    window.location.href = `${API}/auth/apple`;
-  };
-
   return (
-    <div className="auth-root">
-      <header className="auth-header">
-        <img src={scrumLogo} alt="Scrum Manager Logo" className="scrum-logo" />
-        <h1 className="scrum-title">Scrum Manager</h1>
-      </header>
-      <div className="auth-card">
-        <h2>Sign In</h2>
-        <form onSubmit={handleEmailSignIn} className="auth-form">
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-          <button className="btn btn-primary" type="submit">Sign In with Email</button>
-        </form>
-        <div className="auth-social">
-          <button onClick={startGoogle} className="btn btn-google">
-            <img src={googleLogo} alt="" className="social-icon" />
-            <div className="btn-text">Sign in with Google</div>
-          </button>
-          <button onClick={startApple} className="btn btn-apple">
-            <img src={appleLogo} alt="" className="social-icon" />
-            <div className="btn-text">Sign in with Apple</div>
-          </button>
-        </div>
-        <div className="auth-link">
-          <span>New user? <a href="/signup">Sign Up</a></span>
+    <div className="login-container">
+      <div className="login-left">
+        <div className="login-form-container">
+          <h1>Sign in to your Account</h1>
+          <form onSubmit={handleEmailSignIn} className="login-form">
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <div className="password-input">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                />
+                <a href="/forgot-password" className="forgot-link">Forgot password?</a>
+              </div>
+            </div>
+            <button type="submit" className="btn-signin">Sign In</button>
+          </form>
+          <div className="divider">
+            <span>or continue with</span>
+          </div>
+          <div className="social-buttons">
+            <button className="btn-social btn-google">
+              <img src={googleLogo} alt="Google" />
+              <span>Google</span>
+            </button>
+            <button className="btn-social btn-apple">
+              <img src={appleLogo} alt="Apple" />
+              <span>Apple</span>
+            </button>
+          </div>
+          <p className="signup-link">
+            Not registered yet? <a href="/signup">Create an account</a>
+          </p>
         </div>
       </div>
     </div>
