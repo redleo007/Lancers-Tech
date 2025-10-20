@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const scrumLogo = "/scrum-logo.svg";
-const googleLogo = "/Google__G__logo.svg.webp";
-const appleLogo = "/png-clipart-apple-logo-brand-apple-company-trademark-thumbnail.png";
+const scrumLogo = "/assets/images/Scrum_logo.jpg";
+const googleLogo = "/assets/images/Google__logo.jpg";
+const appleLogo = "/assets/images/Apple_logo.jpg";
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function SignUpPage() {
@@ -28,6 +28,7 @@ export default function SignUpPage() {
     <div className="login-container">
       <div className="login-left">
         <div className="login-form-container">
+          <img src={scrumLogo} alt="Scrum Manager" className="scrum-logo" />
           <h1>Create your Account</h1>
           <form onSubmit={handleSignUp} className="login-form">
             <div className="form-group">

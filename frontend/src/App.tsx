@@ -21,7 +21,9 @@ const App: React.FC = () => {
       <div className="app-root">
         {user && (
           <header className="site-header">
-            <h1>Scrum Management</h1>
+            <div className="header-brand">
+              <img src="/assets/images/Scrum_logo.jpg" alt="Scrum Manager" className="header-logo" />
+            </div>
             <nav>
               <NavLink to="/dashboard">Dashboard</NavLink>
               <NavLink to="/projects" style={{ marginLeft: 12 }}>Projects</NavLink>
@@ -35,6 +37,9 @@ const App: React.FC = () => {
         <div className="main-grid">
           {user && (
             <aside className="sidebar">
+              <div className="sidebar-brand">
+                <img src="/SM-logo.png" alt="Scrum Manager" className="sidebar-logo" />
+              </div>
               <NavLink to="/dashboard">Dashboard</NavLink>
               <NavLink to="/projects">Projects</NavLink>
               <NavLink to="/sprints">Sprints</NavLink>
