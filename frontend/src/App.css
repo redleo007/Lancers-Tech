@@ -1,16 +1,43 @@
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(120deg, #e3f2fd 0%, #f5f6fa 100%);
+/* Modern CSS Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Color Variables */
+  --primary: #1976d2;
+  --primary-light: #42a5f5;
+  --primary-dark: #1565c0;
+  --secondary: #43e97b;
+  --grey-light: #f5f6fa;
+  --grey-medium: #e0e0e0;
+  --grey-dark: #757575;
+  --white: #ffffff;
+  --black: #222222;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 24px rgba(25,118,210,0.08);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, var(--grey-light) 0%, #e3f2fd 100%);
+  color: var(--black);
+  line-height: 1.5;
   min-height: 100vh;
 }
 
+/* Auth Pages */
 .auth-root {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
   justify-content: center;
+  padding: 24px;
 }
 
 .auth-header {
@@ -18,100 +45,157 @@ body {
   flex-direction: column;
   align-items: center;
   margin-bottom: 32px;
+  animation: fadeDown 0.5s ease-out;
 }
 
 .scrum-logo {
   width: 64px;
   height: 64px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
 
 .scrum-title {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #1976d2;
-  letter-spacing: 2px;
+  color: var(--primary);
+  letter-spacing: 1px;
   margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .auth-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08);
-  padding: 40px 32px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 32px;
   width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  max-width: 420px;
+  animation: fadeUp 0.5s ease-out;
 }
 
-.auth-social {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 8px;
+.auth-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 24px;
+  text-align: center;
 }
 
-.btn {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-  background: #e0e0e0;
-  color: #222;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-google {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  color: #222;
-}
-
-.btn-apple {
-  background: #222;
-  color: #fff;
-}
-
-.social-icon {
-  width: 22px;
-  height: 22px;
-}
-
+/* Forms */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  margin: 24px 0;
+  margin-bottom: 20px;
 }
 
 input {
-  padding: 10px;
-  border: 1px solid #bdbdbd;
-  border-radius: 6px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--grey-medium);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
-  background: #f8f9fa;
-  transition: border 0.2s;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
 input:focus {
-  border-color: #1976d2;
+  border-color: var(--primary);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(25,118,210,0.1);
 }
 
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-primary {
+  height: 44px;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-google, .btn-apple {
+  flex: 1;
+  height: 48px;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-google {
+  background: var(--white);
+  border: 1.5px solid var(--grey-medium);
+  color: var(--black);
+}
+
+.btn-apple {
+  background: var(--black);
+  border: 1.5px solid var(--black);
+  color: var(--white);
+}
+
+/* Logo styles */
+.social-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Container for button text */
+.btn-text {
+  flex: 1;
+  text-align: center;
+  margin-left: -32px; /* Offset to center text accounting for icon */
+}
+
+/* Social Login */
+.auth-social {
+  display: flex;
+  gap: 16px;
+  margin: 24px 0;
+  width: 100%;
+}
+
+/* Links */
 .auth-link {
   text-align: center;
-  font-size: 1rem;
-  color: #555;
+  color: var(--grey-dark);
+  margin-top: 16px;
 }
 
 .auth-link a {
-  color: #1976d2;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -120,3 +204,44 @@ input:focus {
   text-decoration: underline;
 }
 
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 24px;
+  }
+
+  .auth-social {
+    flex-direction: column;
+  }
+
+  .btn-google, .btn-apple {
+    width: 100%;
+  }
+
+  .scrum-title {
+    font-size: 1.8rem;
+  }
+}

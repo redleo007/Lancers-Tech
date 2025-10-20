@@ -14,6 +14,12 @@ export default function SignInPage() {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Temporary mock for demo login
+    if (email === "demo@gmail.com" && password === "demopass1234") {
+      localStorage.setItem("token", "demo-token");
+      navigate("/dashboard");
+      return;
+    }
     try {
       const res = await axios.post(`${API}/auth/email/login`, { email, password });
       localStorage.setItem("token", res.data.token);
@@ -58,12 +64,12 @@ export default function SignInPage() {
         </form>
         <div className="auth-social">
           <button onClick={startGoogle} className="btn btn-google">
-            <img src={googleLogo} alt="Google" className="social-icon" />
-            Sign in with Google
+            <img src={googleLogo} alt="" className="social-icon" />
+            <div className="btn-text">Sign in with Google</div>
           </button>
           <button onClick={startApple} className="btn btn-apple">
-            <img src={appleLogo} alt="Apple" className="social-icon" />
-            Sign in with Apple
+            <img src={appleLogo} alt="" className="social-icon" />
+            <div className="btn-text">Sign in with Apple</div>
           </button>
         </div>
         <div className="auth-link">
