@@ -159,6 +159,37 @@ body {
   margin-bottom: 1.25rem;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-muted);
+  transition: color 0.2s;
+}
+
+.input-with-icon input {
+  padding-left: 44px;
+}
+
+.input-with-icon input:focus + .icon {
+  color: var(--color-primary);
+}
+.password-input .icon {
+  cursor: pointer;
+}
+.password-input .input-with-icon .icon {
+  left: auto;
+  right: 16px;
+}
+.password-input .input-with-icon input {
+  padding-left: 16px;
+  padding-right: 44px;
+}
 .form-group label {
   display: block;
   text-align: left;
@@ -178,7 +209,7 @@ body {
   right: 0;
   top: -25px;
   font-size: 0.875rem;
-  color: var(--primary);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -208,7 +239,7 @@ input::placeholder {
 
 .btn-signin {
   width: 100%;
-  background: #4361ee;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: 0.875rem;
@@ -299,7 +330,7 @@ input::placeholder {
 }
 
 .signup-link a {
-  color: var(--primary);
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -378,5 +409,50 @@ input::placeholder {
   
   .btn-social {
     width: 100%;
+  }
+}
+
+/* ===============================
+   Notification
+================================= */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1000;
+  cursor: pointer;
+  animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+  background-color: #ecfdf5; /* Green-50 */
+  border: 1px solid #10b981; /* Green-500 */
+  color: #065f46; /* Green-800 */
+}
+
+.notification.error {
+  background-color: #fef2f2; /* Red-50 */
+  border: 1px solid #ef4444; /* Red-500 */
+  color: #991b1b; /* Red-800 */
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

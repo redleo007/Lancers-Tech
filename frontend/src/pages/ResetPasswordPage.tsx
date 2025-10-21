@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import AuthForm from '../components/auth/AuthForm';
-import { PiEye, PiEyeSlash } from 'react-icons/pi';
+import AuthLayout from '../components/auth/AuthLayout';
+import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useNotification } from '../context/NotificationContext';
 
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function ResetPasswordPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -29,24 +28,20 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setIsLoading(true);
     try {
       await axios.post(`${API}/auth/reset-password`, { token, password });
       showNotification('Password has been reset successfully. Please sign in.', 'success');
       navigate('/login');
     } catch (err: any) {
       showNotification(err?.response?.data?.error || 'Failed to reset password.', 'error');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <AuthForm
+    <AuthLayout
       title="Reset Password"
       onSubmit={handleResetPassword}
       submitButtonText="Reset Password"
-      isLoading={isLoading}
       footerContent={
         <p className="signup-link">
           Remember your password? <a href="/login">Sign In</a>
@@ -65,28 +60,26 @@ export default function ResetPasswordPage() {
             required
           />
           <div className="icon" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <PiEye size={20} /> : <PiEyeSlash size={20} />}
+            {showPassword ? <PiEyeSlash size={20} /> : <PiEye size={20} />}
           </div>
         </div>
       </div>
       <div className="form-group">
         <label>Confirm New Password</label>
-        <div className="password-input">
-          <div className="input-with-icon">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your new password"
-              required
-            />
-            <div className="icon" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-              {showConfirmPassword ? <PiEye size={20} /> : <PiEyeSlash size={20} />}
-            </div>
+        <div className="input-with-icon">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm your new password"
+            required
+          />
+          <div className="icon" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+            {showConfirmPassword ? <PiEyeSlash size={20} /> : <PiEye size={20} />}
           </div>
         </div>
       </div>
-    </AuthForm>
+    </AuthLayout>
   );
 }

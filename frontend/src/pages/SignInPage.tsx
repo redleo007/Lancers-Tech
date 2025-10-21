@@ -1,78 +1,101 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AuthLayout from "../components/auth/AuthLayout";
+import { PiEnvelope, PiLock, PiEye, PiEyeSlash } from "react-icons/pi";
 
-const scrumLogo = "/assets/images/Scrum_logo.jpg";
-const googleLogo = "/assets/images/Google__logo.jpg";
-const appleLogo = "/assets/images/Apple_logo.jpg";
+import { useNotification } from "../context/NotificationContext";
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const { showNotification } = useNotification();
   const navigate = useNavigate();
+
+  const validateField = (name: string, value: string) => {
+    let error = "";
+    if (name === "email") {
+      if (!value) {
+        error = "Email is required.";
+      } else if (!/\S+@\S+\.\S+/.test(value)) {
+        error = "Email is invalid.";
+      }
+    } else if (name === "password" && !value) {
+      error = "Password is required.";
+    }
+    setErrors(prev => ({ ...prev, [name]: error }));
+    return !error;
+  };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isEmailValid = validateField("email", email);
+    const isPasswordValid = validateField("password", password);
+
+    if (!isEmailValid || !isPasswordValid) return;
+
     try {
       const res = await axios.post(`${API}/auth/email/login`, { email, password });
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err: any) {
-      alert(err?.response?.data?.error || "Login failed");
+      showNotification(err?.response?.data?.error || "Login failed", "error");
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-left">
-        <div className="login-form-container">
-          <img src={scrumLogo} alt="Scrum Manager" className="scrum-logo" />
-          <h1>Sign in to your Account</h1>
-          <form onSubmit={handleEmailSignIn} className="login-form">
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <div className="password-input">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                />
-                <a href="/forgot-password" className="forgot-link">Forgot password?</a>
-              </div>
-            </div>
-            <button type="submit" className="btn-signin">Sign In</button>
-          </form>
-          <div className="divider">
-            <span>or continue with</span>
-          </div>
-          <div className="social-buttons">
-            <button className="btn-social btn-google">
-              <img src={googleLogo} alt="Google" />
-              <span>Google</span>
-            </button>
-            <button className="btn-social btn-apple">
-              <img src={appleLogo} alt="Apple" />
-              <span>Apple</span>
-            </button>
-          </div>
-          <p className="signup-link">
-            Not registered yet? <a href="/signup">Create an account</a>
-          </p>
+    <AuthLayout
+      title="Sign in to your Account"
+      onSubmit={handleEmailSignIn}
+      submitButtonText="Sign In"
+      footerContent={
+        <p className="signup-link">
+          Not registered yet? <a href="/signup">Create an account</a>
+        </p>
+      }
+    >
+      <div className="form-group">
+        <label>Email</label>
+        <div className="input-with-icon">
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) => validateField(e.target.name, e.target.value)}
+            placeholder="Enter your email"
+            className={errors.email ? "error" : ""}
+            required
+          />
+          <PiEnvelope className="icon" size={20} />
         </div>
+        {errors.email && <p className="error-message">{errors.email}</p>}
       </div>
-    </div>
+      <div className="form-group">
+        <label>Password</label>
+        <div className="password-input">
+          <div className="input-with-icon">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={(e) => validateField(e.target.name, e.target.value)}
+              placeholder="Enter your password"
+              className={errors.password ? "error" : ""}
+              required
+            />
+            <div className="icon" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <PiEyeSlash size={20} /> : <PiEye size={20} />}
+            </div>
+          </div>
+          <a href="/forgot-password" className="forgot-link">Forgot password?</a>
+        </div>
+        {errors.password && <p className="error-message">{errors.password}</p>}
+      </div>
+    </AuthLayout>
   );
 }

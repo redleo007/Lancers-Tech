@@ -2,15 +2,15 @@
    Theme Variables
 ================================= */
 :root {
-  --color-primary: #2563eb; /* Blue-600 */
-  --color-primary-dark: #1d4ed8;
-  --color-accent: #10b981; /* Green-500 */
+  --color-primary: #3b82f6; /* Blue-500 */
+  --color-primary-dark: #2563eb; /* Blue-600 */
+  --color-accent: #10b981; /* Emerald-500 */
   --color-danger: #ef4444; /* Red-500 */
   --color-warning: #f59e0b; /* Amber-500 */
 
-  --color-bg: #f9fafb; /* Gray-50 */
+  --color-bg: #f1f5f9; /* Slate-100 */
   --color-surface: #ffffff;
-  --color-border: #e5e7eb; /* Gray-200 */
+  --color-border: #e2e8f0; /* Slate-200 */
   --color-text: #111827; /* Gray-900 */
   --color-muted: #6b7280; /* Gray-500 */
 
