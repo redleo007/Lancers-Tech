@@ -12,6 +12,13 @@ export default function Login() {
     window.location.href = "http://localhost:5000/auth/apple"
   }
 
+  const handleDemoLogin = async () => {
+    const res = await fetch("http://localhost:5000/auth/demo");
+    if (res.ok) {
+      window.location.href = "/projects";
+    }
+  };
+
   const handlePhoneLogin = async () => {
     const res = await fetch("http://localhost:5000/auth/phone", {
       method: "POST",
@@ -39,6 +46,13 @@ export default function Login() {
           className="flex items-center justify-center w-full p-3 mb-4 text-white bg-black rounded-lg hover:bg-gray-800"
         >
           <FaApple className="mr-2" /> Continue with Apple
+        </button>
+
+        <button
+          onClick={handleDemoLogin}
+          className="flex items-center justify-center w-full p-3 mb-4 text-white bg-gray-500 rounded-lg hover:bg-gray-600"
+        >
+          Demo Login
         </button>
 
         <div className="mt-6">

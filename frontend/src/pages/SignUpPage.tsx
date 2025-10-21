@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../components/auth/AuthLayout";
+import AuthForm from "../components/auth/AuthForm";
 import { useNotification } from "../context/NotificationContext";
 import { PiUser, PiEnvelope, PiLock, PiEye, PiEyeSlash } from "react-icons/pi";
 
@@ -15,6 +15,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({ name: "", email: "", password: "", confirmPassword: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
   const navigate = useNavigate();
 
@@ -54,18 +55,22 @@ export default function SignUpPage() {
 
     if (!isNameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) return;
 
+    setIsLoading(true);
     try {
       const res = await axios.post(`${API}/auth/email/signup`, { name, email, password });
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err: any) {
       showNotification(err?.response?.data?.error || "Signup failed", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <AuthLayout
+    <AuthForm
       title="Create your Account"
+      isLoading={isLoading}
       onSubmit={handleSignUp}
       submitButtonText="Sign Up"
       footerContent={
@@ -146,6 +151,6 @@ export default function SignUpPage() {
         </div>
         {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
       </div>
-    </AuthLayout>
+    </AuthForm>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../components/auth/AuthLayout";
+import AuthForm from "../components/auth/AuthForm";
 import { PiEnvelope, PiLock, PiEye, PiEyeSlash } from "react-icons/pi";
 
 import { useNotification } from "../context/NotificationContext";
@@ -12,6 +12,7 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
   const navigate = useNavigate();
 
@@ -37,18 +38,36 @@ export default function SignInPage() {
 
     if (!isEmailValid || !isPasswordValid) return;
 
+    setIsLoading(true);
+
+    // --- Temporary Demo Login ---
+    if (email === 'demo@sprintzen.com' && password === 'demo@1234') {
+      setTimeout(() => {
+        // A dummy JWT token with a payload: { "name": "Demo User", "email": "demo@sprintzen.com" }
+        const demoToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVtbyBVc2VyIiwiZW1haWwiOiJkZW1vQHNwcmludHplbi5jb20ifQ.dummy_signature';
+        localStorage.setItem('token', demoToken);
+        setIsLoading(false);
+        navigate('/dashboard');
+      }, 1000);
+      return;
+    }
+    // --- End Temporary Demo Login ---
+
     try {
       const res = await axios.post(`${API}/auth/email/login`, { email, password });
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err: any) {
       showNotification(err?.response?.data?.error || "Login failed", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <AuthLayout
+    <AuthForm
       title="Sign in to your Account"
+      isLoading={isLoading}
       onSubmit={handleEmailSignIn}
       submitButtonText="Sign In"
       footerContent={
@@ -96,6 +115,6 @@ export default function SignInPage() {
         </div>
         {errors.password && <p className="error-message">{errors.password}</p>}
       </div>
-    </AuthLayout>
+    </AuthForm>
   );
 }

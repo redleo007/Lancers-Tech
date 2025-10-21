@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const googleLogo = "/assets/images/Google__logo.jpg";
@@ -18,19 +18,33 @@ export default function AuthForm({ title, children, onSubmit, submitButtonText, 
   const navigate = useNavigate();
 
   const handleGoogleSignIn = () => {
-    const googleLoginURL = `${API}/auth/google`;
-    const newWindow = window.open(googleLoginURL, "_blank", "width=500,height=600");
-
-    const checkWindow = setInterval(() => {
-      if (newWindow && newWindow.closed) {
-        clearInterval(checkWindow);
-        // Potentially refresh user state or navigate, assuming backend sets a cookie
-        // For now, we'll just navigate to the dashboard as a simple example
-        // A more robust solution would use a message event or check auth state
-        window.location.href = "/dashboard";
-      }
-    }, 1000);
+    const googleLoginURL = `${API}/auth/google/login`;
+    window.open(googleLoginURL, "_blank", "width=500,height=600");
   };
+
+  const handleAppleSignIn = () => {
+    const appleLoginURL = `${API}/auth/apple/login`;
+    window.open(appleLoginURL, "_blank", "width=500,height=600");
+  };
+
+  useEffect(() => {
+    const handleAuthMessage = (event: MessageEvent) => {
+      // Ensure the message is from a trusted source
+      if (event.origin !== window.location.origin) {
+        return;
+      }
+
+      const { token } = event.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        navigate("/dashboard");
+      }
+    };
+
+    window.addEventListener("message", handleAuthMessage);
+
+    return () => window.removeEventListener("message", handleAuthMessage);
+  }, [navigate]);
 
   return (
     <div className="login-container">
@@ -56,7 +70,7 @@ export default function AuthForm({ title, children, onSubmit, submitButtonText, 
               <img src={googleLogo} alt="Google" />
               <span>Google</span>
             </button>
-            <button className="btn-social btn-apple">
+            <button className="btn-social btn-apple" onClick={handleAppleSignIn}>
               <img src={appleLogo} alt="Apple" />
               <span>Apple</span>
             </button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import AuthLayout from '../components/auth/AuthLayout';
+import AuthForm from '../components/auth/AuthForm';
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useNotification } from '../context/NotificationContext';
 
@@ -12,6 +12,7 @@ export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { showNotification } = useNotification();
@@ -28,18 +29,22 @@ export default function ResetPasswordPage() {
       return;
     }
 
+    setIsLoading(true);
     try {
       await axios.post(`${API}/auth/reset-password`, { token, password });
       showNotification('Password has been reset successfully. Please sign in.', 'success');
       navigate('/login');
     } catch (err: any) {
       showNotification(err?.response?.data?.error || 'Failed to reset password.', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <AuthLayout
+    <AuthForm
       title="Reset Password"
+      isLoading={isLoading}
       onSubmit={handleResetPassword}
       submitButtonText="Reset Password"
       footerContent={
@@ -80,6 +85,6 @@ export default function ResetPasswordPage() {
           </div>
         </div>
       </div>
-    </AuthLayout>
+    </AuthForm>
   );
 }
