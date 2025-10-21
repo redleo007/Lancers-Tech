@@ -41,7 +41,7 @@ export default function SignInPage() {
     setIsLoading(true);
 
     // --- Temporary Demo Login ---
-    if (email === 'demo@sprintzen.com' && password === 'demo@1234') {
+    if (email === 'demo@sprintzen.com' && password === 'Naveeth@123') {
       setTimeout(() => {
         // A dummy JWT token with a payload: { "name": "Demo User", "email": "demo@sprintzen.com" }
         const demoToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVtbyBVc2VyIiwiZW1haWwiOiJkZW1vQHNwcmludHplbi5jb20ifQ.dummy_signature';

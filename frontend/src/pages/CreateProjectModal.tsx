@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Modal from '../common/Modal';
-import { useNotification } from '../../context/NotificationContext';
+import Modal from '../pages/Modal';
+import { useNotification } from '../context/NotificationContext';
 
 interface CreateProjectModalProps {
   isOpen: boolean;
