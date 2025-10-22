@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ApiErrorResponse } from '../types/errors';
 import AuthForm from "../components/auth/AuthForm";
 import { useFormValidation } from "../hooks/useFormValidation";
 import { useNotification } from "../context/NotificationContext";
-import { PiUser, PiEnvelope, PiLock, PiEye, PiEyeSlash } from "react-icons/pi";
+import { PiUser, PiEnvelope, PiEye, PiEyeSlash } from "react-icons/pi";
 import "../styles/Auth.css";
 
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
@@ -41,7 +42,8 @@ export default function SignUpPage() {
       const res = await axios.post(`${API}/auth/email/signup`, { name, email, password });
       showNotification(res.data.message || "Registration successful! Please sign in.", "success");
       navigate("/signin");
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as ApiErrorResponse;
       showNotification(err?.response?.data?.error || "Signup failed", "error");
     } finally {
       setIsLoading(false);

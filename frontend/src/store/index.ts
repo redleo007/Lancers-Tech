@@ -1,3 +1,3 @@
 export * from './projectStore'
-export * from './taskStore'
+export * from './taskstore'
 //export * from './sprintStore'

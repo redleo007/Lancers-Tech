@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Modal from '../pages/Modal';
 import { useNotification } from '../context/NotificationContext';
+import { Project } from '../types/project';
 
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onProjectCreated: (project: any) => void;
+  onProjectCreated: (project: Project) => void;
 }
 
 export default function CreateProjectModal({ isOpen, onClose, onProjectCreated }: CreateProjectModalProps) {

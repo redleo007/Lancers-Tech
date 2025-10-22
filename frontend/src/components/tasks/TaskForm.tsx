@@ -17,7 +17,7 @@ const TaskForm: React.FC<{ projectId?: string; sprintId?: string | null }> = ({ 
     <form onSubmit={submit} className="card">
       <h3>Create Task</h3>
       <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Task title" />
-      <input value={estimate as any} onChange={(e)=>setEstimate(e.target.value ? Number(e.target.value) : '')} placeholder="Estimate (pts)" />
+      <input value={estimate.toString()} onChange={(e)=>setEstimate(e.target.value ? Number(e.target.value) : '')} placeholder="Estimate (pts)" />
       <button className="btn btn-primary" type="submit">Add Task</button>
     </form>
   )

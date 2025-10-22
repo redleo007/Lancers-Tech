@@ -38,16 +38,17 @@ export function useApi<T>(url: string, options: AxiosRequestConfig = {}, hookOpt
     try {
       const response = await api({ url, ...options });
       setData(response.data);
-    } catch (err: any) {
-      if (err.response?.status === 401) {
+    } catch (err) {
+      const error = err as AxiosError;
+      if (error.response?.status === 401) {
         logout();
       } else {
-        setError(err);
+        setError(error);
       }
     } finally {
       setIsLoading(false);
     }
-  }, [url, JSON.stringify(options), logout]);
+  }, [url, options, logout]);
 
   useEffect(() => {
     fetchData();

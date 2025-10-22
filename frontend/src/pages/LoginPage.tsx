@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ApiErrorResponse } from '../types/errors'
 
 const API = import.meta.env.VITE_API_BASE || 'http://localhost:4000'
 
@@ -35,7 +36,8 @@ export default function LoginPage() {
       await axios.post(`${API}/auth/phone/request-otp`, { phone })
       setOtpSent(true)
       alert('OTP sent to phone')
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as { response?: { data?: { error?: string } } };
       alert(err?.response?.data?.error || 'Failed to send OTP')
     }
   }
@@ -51,7 +53,8 @@ export default function LoginPage() {
       } else {
         alert('No token returned')
       }
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as ApiErrorResponse;
       alert(err?.response?.data?.error || 'OTP verification failed')
     }
   }

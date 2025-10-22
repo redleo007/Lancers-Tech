@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ApiErrorResponse } from '../types/errors';
 import AuthForm from '../components/auth/AuthForm';
 import { PiEye, PiEyeSlash } from "react-icons/pi";
 import { useNotification } from '../context/NotificationContext';
@@ -34,7 +35,8 @@ export default function ResetPasswordPage() {
       await axios.post(`${API}/auth/reset-password`, { token, password });
       showNotification('Password has been reset successfully. Please sign in.', 'success');
       navigate('/login');
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as ApiErrorResponse;
       showNotification(err?.response?.data?.error || 'Failed to reset password.', 'error');
     } finally {
       setIsLoading(false);

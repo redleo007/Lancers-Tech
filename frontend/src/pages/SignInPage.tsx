@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ApiErrorResponse } from '../types/errors';
 import AuthForm from "../components/auth/AuthForm";
-import { PiEnvelope, PiLock, PiEye, PiEyeSlash } from "react-icons/pi";
+import { PiEnvelope, PiEye, PiEyeSlash } from "react-icons/pi";
 
 import { useFormValidation } from "../hooks/useFormValidation";
 import "../styles/Auth.css";
@@ -48,7 +49,8 @@ export default function SignInPage() {
         const res = await axios.post(`${API}/auth/email/login`, { email, password });
         localStorage.setItem("token", res.data.token);
         navigate("/dashboard");
-      } catch (err: any) {
+      } catch (error) {
+        const err = error as ApiErrorResponse;
         showNotification(err?.response?.data?.error || "Login failed", "error");
       } finally {
         setIsLoading(false);

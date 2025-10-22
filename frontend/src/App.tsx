@@ -13,15 +13,13 @@ import Profile from './components/auth/Profile'
 import NotFoundPage from './pages/NotFoundPage'
 import Notification from './components/common/Notification'
 import { NotificationProvider } from './context/NotificationContext'
-import { useAuth } from './hooks/useAuth'
+
 import MainLayout from './components/layout/MainLayout'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PrivateRoute from './components/common/PrivateRoute'
 import './App.css'
 
 const App: React.FC = () => {
-  const { user } = useAuth()
-
   return (
     <NotificationProvider>
       <ErrorBoundary>
