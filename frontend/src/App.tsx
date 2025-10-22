@@ -18,7 +18,6 @@ import MainLayout from './components/layout/MainLayout'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PrivateRoute from './components/common/PrivateRoute'
 import './App.css'
-import './styles/global.css'
 
 const App: React.FC = () => {
   const { user } = useAuth()

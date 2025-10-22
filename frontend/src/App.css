@@ -207,10 +207,11 @@ body {
 .forgot-link {
   position: absolute;
   right: 0;
-  top: -25px;
+  top: 40px;
   font-size: 0.875rem;
   color: var(--color-primary);
-  text-decoration: none;
+  text-decoration: underline;
+  cursor: pointer
 }
 
 .forgot-link:hover {

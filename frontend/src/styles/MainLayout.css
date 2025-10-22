@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Main Layout Styles (Purple Theme)
+   ========================================================================== */
+
+/* Re-using variables from Auth.css for consistency.
+   Ensure Auth.css or these variables are loaded globally, for example in your main App.tsx or index.css */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background-color, #f9fafb);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 260px;
+  background-color: var(--container-bg, #ffffff);
+  border-right: 1px solid var(--border-color, #e5e7eb);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  text-align: center;
+}
+
+.sidebar-logo {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  font-size: 2rem;
+  color: var(--primary-purple, #6d28d9);
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  padding: 1rem 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  margin: 0.25rem 1rem;
+  color: var(--text-color-light, #6b7280);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav li a:hover {
+  background-color: #f3f4f6; /* A light purple/gray */
+  color: var(--primary-purple-dark, #5b21b6);
+}
+
+.sidebar-nav li a.active {
+  background-color: var(--primary-purple, #6d28d9);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+}
+
+.sidebar-nav li a .icon {
+  margin-right: 1rem;
+  font-size: 1.25rem;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* --- Header --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--container-bg, #ffffff);
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color, #1f2937);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-profile .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-purple-light, #8b5cf6);
+}
+
+.user-profile .username {
+  font-weight: 500;
+  color: var(--text-color, #1f2937);
+}
+
+/* --- Page Content --- */
+.page-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: var(--background-color, #f9fafb);
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    z-index: 1000;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .page-content {
+    padding: 1.5rem;
+  }
+
+  .mobile-menu-button {
+    display: block; /* Show hamburger menu button on mobile */
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+  }
+}
