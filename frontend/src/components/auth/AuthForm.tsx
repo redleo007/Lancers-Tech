@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const googleLogo = "/assets/images/Google__logo.jpg";
 const appleLogo = "/assets/images/Apple_logo.jpg";
-const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
+const API = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 interface AuthLayoutProps {
   title: string;
@@ -29,12 +29,16 @@ export default function AuthForm({ title, children, onSubmit, submitButtonText, 
 
   useEffect(() => {
     const handleAuthMessage = (event: MessageEvent) => {
-      // Ensure the message is from a trusted source
-      if (event.origin !== window.location.origin) {
+      // Accept messages originating from the configured backend API origin only
+      try {
+        const backendOrigin = new URL(API).origin;
+        if (event.origin !== backendOrigin) return;
+      } catch (e) {
+        // If URL parsing fails, be conservative and reject the message
         return;
       }
 
-      const { token } = event.data;
+      const { token } = event.data || {};
       if (token) {
         localStorage.setItem("token", token);
         navigate("/dashboard");

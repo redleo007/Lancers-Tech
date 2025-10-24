@@ -8,7 +8,7 @@ import { PiEnvelope, PiEye, PiEyeSlash } from "react-icons/pi";
 import { useFormValidation } from "../hooks/useFormValidation";
 import "../styles/Auth.css";
 import { useNotification } from "../context/NotificationContext";
-const API = import.meta.env.VITE_API_BASE || "http://localhost:4000";
+const API = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 // Demo credentials for temporary login
 const DEMO_EMAIL = 'demo@sprintzen.com';
