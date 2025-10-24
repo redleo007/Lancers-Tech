@@ -92,6 +92,16 @@
   cursor: pointer;
 }
 
+/* Make the password toggle match the purple theme and avoid duplicate icons showing */
+.password-input .input-with-icon .icon {
+  color: var(--primary-purple);
+  z-index: 2;
+}
+
+/* Defensive rule: if multiple icon elements accidentally end up next to each other,
+   only show the first one (prevents a duplicated toggle from appearing) */
+.password-input .input-with-icon .icon + .icon { display: none; }
+
 .password-input input {
   padding-left: 1rem; /* Reset padding for password */
   padding-right: 3rem; /* Space for the eye icon */

@@ -7,13 +7,23 @@
   "theme_color": "#6d28d9",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "64x64",
-      "type": "image/svg+xml"
+      "src": "/favicon-16.png",
+      "sizes": "16x16",
+      "type": "image/png"
     },
     {
-      "src": "/assets/images/SprintZen.svg",
-      "sizes": "160x160",
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
       "type": "image/svg+xml"
     }
   ]
