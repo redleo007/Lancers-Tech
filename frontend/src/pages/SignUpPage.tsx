@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ApiErrorResponse } from '../types/errors';
 import AuthForm from "../components/auth/AuthForm";
 import { useFormValidation } from "../hooks/useFormValidation";
@@ -41,7 +41,7 @@ export default function SignUpPage() {
     try {
       const res = await axios.post(`${API}/auth/email/signup`, { name, email, password });
       showNotification(res.data.message || "Registration successful! Please sign in.", "success");
-      navigate("/signin");
+      navigate("/login");
     } catch (error) {
       const err = error as ApiErrorResponse;
       showNotification(err?.response?.data?.error || "Signup failed", "error");
@@ -59,7 +59,7 @@ export default function SignUpPage() {
         submitButtonText="Sign Up"
         footerContent={
           <p className="signup-link">
-            Already have an account? <a href="/signin">Sign in</a>
+            Already have an account? <Link to="/login">Sign in</Link>
           </p>
         }
       >

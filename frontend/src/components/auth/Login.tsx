@@ -1,21 +1,59 @@
 import { useState } from "react"
 import { FaGoogle, FaApple, FaPhone } from "react-icons/fa"
+import { useAuth } from "../../hooks/useAuth"
+import { useNavigate } from "react-router-dom"
+import { User } from "../../types/auth"
 
 export default function Login() {
   const [phone, setPhone] = useState("")
+  const [error, setError] = useState("")
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSuccessfulLogin = (userData: User) => {
+    login(userData);
+    navigate("/dashboard");  // Navigate to main dashboard after successful login
+  };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google"
+    // Store the intended redirect in localStorage
+    localStorage.setItem('postLoginRedirect', '/dashboard');
+    window.location.href = "http://localhost:5000/auth/google";
   }
 
   const handleAppleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/apple"
+    localStorage.setItem('postLoginRedirect', '/dashboard');
+    window.location.href = "http://localhost:5000/auth/apple";
   }
 
   const handleDemoLogin = async () => {
-    const res = await fetch("http://localhost:5000/auth/demo");
-    if (res.ok) {
-      window.location.href = "/projects";
+    try {
+      console.log("Starting demo login process...");
+      setError("");
+
+      // Create a demo token (similar to SignInPage)
+      const demoToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVtbyBVc2VyIiwiZW1haWwiOiJkZW1vQHNwcmludHplbi5jb20ifQ.dummy_signature';
+      
+      // Create demo user data
+      const user: User = {
+        id: 'demo-user',
+        name: 'Demo User',
+        email: 'demo@sprintzen.com'
+      };
+
+      // Store the token in localStorage (like SignInPage does)
+      localStorage.setItem('token', demoToken);
+      
+      // Update auth store with user data
+      console.log("Updating auth store with demo user:", user);
+      login(user);
+
+      console.log("Navigating to dashboard...");
+      navigate("/dashboard", { replace: true });
+      
+    } catch (err: unknown) {
+      console.error("Demo login error:", err);
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
     }
   };
 
@@ -33,6 +71,11 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+        {error && (
+          <div className="mb-4 p-3 text-red-700 bg-red-100 rounded-lg">
+            {error}
+          </div>
+        )}
 
         <button
           onClick={handleGoogleLogin}

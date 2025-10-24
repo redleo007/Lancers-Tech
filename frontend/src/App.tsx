@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
@@ -41,7 +41,7 @@ const App: React.FC = () => {
               </PrivateRoute>
             }
           >
-            <Route index element={<DashboardPage />} />
+            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="sprints" element={<SprintsPage />} />

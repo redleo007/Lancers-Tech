@@ -3,9 +3,11 @@ import ProjectOverview from '../components/dashboard/ProjectOverview'
 import TeamStats from '../components/dashboard/TeamStats'
 
 const DashboardPage: React.FC = () => (
-  <div>
-    <h1>Dashboard</h1>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 12 }}>
+  <div className="page-container">
+    <div className="page-header">
+      <h2>Dashboard</h2>
+    </div>
+    <div className="dashboard-columns">
       <ProjectOverview />
       <TeamStats />
     </div>

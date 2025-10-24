@@ -1,10 +1,13 @@
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role?: string;
+}
+
 export interface LoginResponse {
   token: string;
-  user: {
-    _id: string;
-    email: string;
-    name: string;
-  };
+  user: User;
 }
 
 export interface ApiError {

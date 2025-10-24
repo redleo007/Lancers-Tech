@@ -1,6 +1,6 @@
 import React from "react";
 
-const scrumLogo = "/assets/images/SprintZen.jpg";
+  const scrumLogo = "/assets/images/SprintZen.svg";
 const googleLogo = "/assets/images/Google__logo.jpg";
 const appleLogo = "/assets/images/Apple_logo.jpg";
 

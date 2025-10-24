@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ApiErrorResponse } from '../types/errors';
 import AuthForm from "../components/auth/AuthForm";
 import { PiEnvelope, PiEye, PiEyeSlash } from "react-icons/pi";
@@ -67,7 +67,7 @@ export default function SignInPage() {
         submitButtonText="Sign In"
         footerContent={
           <p className="signup-link">
-            Not registered yet? <a href="/signup">Create an account</a>
+            Not registered yet? <Link to="/signup">Create an account</Link>
           </p>
         }
       >
@@ -106,7 +106,7 @@ export default function SignInPage() {
                 {showPassword ? <PiEyeSlash size={20} /> : <PiEye size={20} />}
               </div>
             </div>
-            <a href="/forgot-password" className="forgot-link">Forgot password?</a>
+            <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>
           </div>
           {errors.password && <p className="error-message">{errors.password}</p>}
         </div>

@@ -3,9 +3,11 @@ import ProductBacklog from '../components/backlog/ProductBacklog'
 import TaskForm from '../components/tasks/TaskForm'
 
 const BacklogPage: React.FC = () => (
-  <div>
-    <h1>Backlog</h1>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 12 }}>
+  <div className="page-container">
+    <div className="page-header">
+      <h2>Backlog</h2>
+    </div>
+    <div className="dashboard-columns">
       <ProductBacklog />
       <TaskForm />
     </div>

@@ -50,7 +50,7 @@ export default function AuthForm({ title, children, onSubmit, submitButtonText, 
     <div className="login-container">
       <div className="login-left">
         <div className="login-form-container">
-          <img src="/assets/images/SprintZen.jpg" alt="SprintZen Logo" className="scrum-logo" />
+          <img src="/assets/images/SprintZen.svg" alt="SprintZen Logo" className="scrum-logo" />
           <h1>{title}</h1>
           <form onSubmit={onSubmit} className="login-form">
             {children}
