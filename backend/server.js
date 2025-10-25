@@ -44,27 +44,104 @@ app.use(passport.session())
 // JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret-jwt-key"
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/sprintzen"
+// MongoDB Connection Configuration
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI_LOCAL || "mongodb://localhost:27017/sprintzen"
 
-// User Schema
+// MongoDB Connection with fallback and retry logic
+const connectDB = async () => {
+  const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  };
+
+  try {
+    await mongoose.connect(MONGODB_URI, options);
+    console.log('Connected to MongoDB:', MONGODB_URI.includes('mongodb+srv') ? 'Atlas' : 'Local');
+  } catch (error) {
+    console.error('MongoDB connection error:', error.message);
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    } else {
+      console.warn('Running in development mode - continuing with reduced functionality');
+    }
+  }
+};
+
+// Initial connection
+connectDB();
+
+// Handle connection events
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+  setTimeout(connectDB, 5000); // Retry connection after 5 seconds
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected. Attempting to reconnect...');
+  setTimeout(connectDB, 5000);
+});
+
+// User Schema with validation
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, unique: true, sparse: true },
-  googleId: { type: String, unique: true, sparse: true },
-  appleId: { type: String, unique: true, sparse: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  name: { 
+    type: String, 
+    required: true,
+    trim: true,
+    minlength: [2, 'Name must be at least 2 characters long']
+  },
+  email: { 
+    type: String, 
+    unique: true, 
+    sparse: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: 'Please enter a valid email'
+    }
+  },
+  googleId: { 
+    type: String, 
+    unique: true, 
+    sparse: true,
+    index: true
+  },
+  appleId: { 
+    type: String, 
+    unique: true, 
+    sparse: true,
+    index: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
+  avatar: {
+    type: String,
+    default: null
+  },
+  lastLogin: {
+    type: Date,
+    default: null
+  }
+}, {
+  timestamps: true, // Automatically manage createdAt and updatedAt
+  toJSON: {
+    transform: function(doc, ret) {
+      delete ret.__v;
+      delete ret.googleId;
+      delete ret.appleId;
+      return ret;
+    }
+  }
 })
 
 const User = mongoose.model('User', userSchema)
-
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => {
-    console.warn('MongoDB connection error:', err.message)
-    console.log('Proceeding with in-memory fallback')
-  })
 
 // --- GOOGLE LOGIN ---
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
