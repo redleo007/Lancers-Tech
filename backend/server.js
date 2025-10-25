@@ -6,34 +6,63 @@ import cors from "cors"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
+import helmet from "helmet"
+import rateLimit from "express-rate-limit"
+import mongoSanitize from "express-mongo-sanitize"
+import hpp from "hpp"
 
 dotenv.config()
 
 // Initialize Express app with security middlewares
 const app = express()
 
-// CORS setup for frontend connection
+// Security Headers
+app.use(helmet())
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later'
+})
+app.use('/auth/', limiter) // Apply rate limiting to auth routes
+
+// Prevent NoSQL injection
+app.use(mongoSanitize())
+
+// Prevent HTTP Parameter Pollution
+app.use(hpp())
+
+// CORS setup for frontend connection with strict options
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || "http://localhost:5173",
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Length', 'X-RateLimit-Reset'],
+  maxAge: 600, // Cache preflight requests for 10 minutes
+  optionsSuccessStatus: 204
 }
 app.use(cors(corsOptions))
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+// Body parser with size limits
+app.use(bodyParser.json({ limit: '10kb' }))
+app.use(bodyParser.urlencoded({ extended: false, limit: '10kb' }))
 
-// Session setup with secure options
+// Session setup with enhanced security
 app.use(
   session({
-    secret: "scrum-app-secret",
+    secret: process.env.SESSION_SECRET || "scrum-app-secret",
+    name: 'sessionId', // Change default cookie name
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === 'production',
+      httpOnly: true, // Prevent XSS
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      path: '/',
+      domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : undefined
     }
   })
 )
@@ -41,8 +70,19 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-// JWT Configuration
+// JWT Configuration with enhanced security
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  console.error('JWT_SECRET is not set in production environment');
+  process.exit(1);
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret-jwt-key"
+const JWT_OPTIONS = {
+  expiresIn: "7d",
+  algorithm: "HS256",
+  audience: process.env.JWT_AUDIENCE || 'sprintzen-app',
+  issuer: process.env.JWT_ISSUER || 'sprintzen-auth'
+}
 
 // MongoDB Connection Configuration
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI_LOCAL || "mongodb://localhost:27017/sprintzen"
@@ -368,13 +408,42 @@ app.get("/", (req, res) => {
   res.status(200).send({ status: "ok", service: "auth", env: process.env.NODE_ENV || "development" })
 })
 
-// Global error handlers to avoid silent exits during development
+// Global error handlers with security considerations
+const errorHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  
+  // Don't leak error details in production
+  const error = process.env.NODE_ENV === 'production' 
+    ? 'An error occurred' 
+    : err.message;
+  
+  res.status(err.status || 500).json({
+    success: false,
+    error
+  });
+};
+
+app.use(errorHandler);
+
+// Handle 404s
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Not found'
+  });
+});
+
 process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err)
-})
+  console.error("Uncaught Exception:", err);
+  // Graceful shutdown
+  process.exit(1);
+});
+
 process.on("unhandledRejection", (reason, p) => {
-  console.error("Unhandled Rejection at:", p, "reason:", reason)
-})
+  console.error("Unhandled Rejection at:", p, "reason:", reason);
+  // Graceful shutdown
+  process.exit(1);
+});
 
 // Start server (bind to 0.0.0.0 so localhost connections from other interfaces succeed)
 const LISTEN_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 5000
