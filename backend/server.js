@@ -2,45 +2,69 @@ import express from "express"
 import passport from "passport"
 import session from "express-session"
 import bodyParser from "body-parser"
-import mysql from "mysql2/promise"
+import cors from "cors"
+import mongoose from "mongoose"
 import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
 
 dotenv.config()
 
+// Initialize Express app with security middlewares
 const app = express()
+
+// CORS setup for frontend connection
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
+app.use(cors(corsOptions))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// Session
+// Session setup with secure options
 app.use(
   session({
     secret: "scrum-app-secret",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
   })
 )
 
 app.use(passport.initialize())
 app.use(passport.session())
 
-// Simple JWT secret fallback
+// JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret-jwt-key"
 
-// MySQL Connection (graceful fallback when DB is not reachable)
-let db = null
-try {
-  db = await mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+// MongoDB Connection
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/sprintzen"
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, unique: true, sparse: true },
+  googleId: { type: String, unique: true, sparse: true },
+  appleId: { type: String, unique: true, sparse: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+})
+
+const User = mongoose.model('User', userSchema)
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => {
+    console.warn('MongoDB connection error:', err.message)
+    console.log('Proceeding with in-memory fallback')
   })
-  console.log("Connected to MySQL database")
-} catch (err) {
-  console.warn("Warning: could not connect to MySQL - proceeding with in-memory fallback:", err.message)
-  // db remains null; strategies will fall back to in-memory operations
-}
 
 // --- GOOGLE LOGIN ---
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
@@ -52,27 +76,38 @@ passport.use(
       callbackURL: "http://localhost:5000/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      // Find or create user in DB
-      const email = profile.emails && profile.emails[0] && profile.emails[0].value
-      let user
-      if (db) {
-        const [rows] = await db.execute(
-          "SELECT * FROM users WHERE google_id = ?",
-          [profile.id]
-        )
-        if (rows.length === 0) {
-          const [result] = await db.execute(
-            "INSERT INTO users (name, email, google_id) VALUES (?, ?, ?)",
-            [profile.displayName, email, profile.id]
-          )
-          user = { id: result.insertId, name: profile.displayName, email }
-        } else {
-          user = rows[0]
+      try {
+        // Find or create user in MongoDB
+        const email = profile.emails?.[0]?.value
+        
+        let user = await User.findOne({ 
+          $or: [
+            { googleId: profile.id },
+            { email: email }
+          ]
+        })
+
+        if (!user) {
+          user = await User.create({
+            name: profile.displayName,
+            email: email,
+            googleId: profile.id
+          })
+        } else if (!user.googleId) {
+          // If user exists with email but no googleId, link the accounts
+          user.googleId = profile.id
+          await user.save()
         }
-      } else {
-        // Fallback: create a temporary user record in-memory
-        user = { id: Date.now(), name: profile.displayName, email }
-        console.warn("DB not available: using in-memory user for login", user.email)
+
+        // Return minimal user object for session
+        return done(null, {
+          id: user._id,
+          name: user.name,
+          email: user.email
+        })
+      } catch (error) {
+        console.error('Error in Google strategy:', error)
+        return done(error)
       }
 
       // Keep minimal user object for session
@@ -173,20 +208,25 @@ if (appleClientId && appleTeamId && appleKeyId && applePrivateKey) {
 
           // Find or create user by apple_id or email
           const appleId = (idToken && idToken.sub) || (profile && profile.id)
-          let user
-          if (db) {
-            const [rows] = await db.execute("SELECT * FROM users WHERE apple_id = ?", [appleId])
-            if (rows.length === 0) {
-              const [result] = await db.execute(
-                "INSERT INTO users (name, email, apple_id) VALUES (?, ?, ?)",
-                [name, email, appleId]
-              )
-              user = { id: result.insertId, name, email }
-            } else {
-              user = rows[0]
-            }
-          } else {
-            user = { id: Date.now(), name, email }
+          
+          let user = await User.findOne({
+            $or: [
+              { appleId: appleId },
+              { email: email }
+            ]
+          })
+
+          if (!user) {
+            user = await User.create({
+              name: name || 'Apple User',
+              email: email,
+              appleId: appleId
+            })
+          } else if (!user.appleId) {
+            // If user exists with email but no appleId, link the accounts
+            user.appleId = appleId
+            if (name) user.name = name
+            await user.save()
           }
 
           return done(null, { id: user.id, name: user.name, email: user.email })
