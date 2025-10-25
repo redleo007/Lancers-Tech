@@ -85,7 +85,26 @@ const JWT_OPTIONS = {
 }
 
 // MongoDB Connection Configuration
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI_LOCAL || "mongodb://localhost:27017/sprintzen"
+const constructMongoDBUri = () => {
+  if (process.env.NODE_ENV === 'production') {
+    // Validate required environment variables
+    const requiredVars = ['MONGODB_USERNAME', 'MONGODB_PASSWORD', 'MONGODB_CLUSTER', 'MONGODB_DATABASE'];
+    const missingVars = requiredVars.filter(varName => !process.env[varName]);
+    
+    if (missingVars.length > 0) {
+      console.error(`Missing required MongoDB environment variables: ${missingVars.join(', ')}`);
+      process.exit(1);
+    }
+
+    // Construct Atlas URI using environment variables
+    return `mongodb+srv://${encodeURIComponent(process.env.MONGODB_USERNAME)}:${encodeURIComponent(process.env.MONGODB_PASSWORD)}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
+  }
+  
+  // Use local MongoDB in development
+  return process.env.MONGODB_URI_LOCAL || "mongodb://localhost:27017/sprintzen";
+};
+
+const MONGODB_URI = constructMongoDBUri();
 
 // MongoDB Connection with fallback and retry logic
 const connectDB = async () => {
