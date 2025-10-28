@@ -1,81 +1,42 @@
-import express from "express"
-import passport from "passport"
-import session from "express-session"
-import bodyParser from "body-parser"
-import mysql from "mysql2/promise"
-import dotenv from "dotenv"
+﻿const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-dotenv.config()
+// Load environment variables
+dotenv.config();
 
-const app = express()
-app.use(bodyParser.json())
+// Create Express app
+const app = express();
 
-// Session
-app.use(
-  session({
-    secret: "scrum-app-secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-)
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-app.use(passport.initialize())
-app.use(passport.session())
+// Basic route for testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to Lancers Tech API' });
+});
 
-// MySQL Connection
-const db = await mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-})
-
-// --- GOOGLE LOGIN ---
-import { Strategy as GoogleStrategy } from "passport-google-oauth20"
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      const [rows] = await db.execute(
-        "SELECT * FROM users WHERE google_id = ?",
-        [profile.id]
-      )
-      if (rows.length === 0) {
-        await db.execute(
-          "INSERT INTO users (name, email, google_id) VALUES (?, ?, ?)",
-          [profile.displayName, profile.emails[0].value, profile.id]
-        )
-      }
-      return done(null, profile)
-    }
-  )
-)
-
-app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }))
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.send("Google Login Successful!")
-  }
-)
-
-// --- APPLE LOGIN (simplified placeholder) ---
-app.get("/auth/apple", (req, res) => {
-  res.send("Apple login not yet configured. Set up Apple OAuth credentials.")
-})
-
-// --- PHONE LOGIN (mock OTP) ---
-app.post("/auth/phone", async (req, res) => {
-  const { phone } = req.body
-  if (!phone) return res.status(400).json({ message: "Phone required" })
-  // In real life → use Twilio
-  res.json({ message: `OTP sent to ${phone}` })
-})
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
 
 // Start server
-app.listen(5000, () => console.log("Auth server running on http://localhost:5000"))
+const PORT = process.env.PORT || 4000;
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lancers-tech', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.warn('MongoDB connection error:', err.message);
+  console.log('Server running in limited mode without database');
+});
